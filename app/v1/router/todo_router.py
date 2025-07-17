@@ -13,7 +13,7 @@ class Task(BaseModel):
     completed: bool
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class TaskCreate(BaseModel):
@@ -52,7 +52,7 @@ async def get_all_tasks(
 @router.get("/{id}", response_model=Task)
 async def get_task(id: int, db: AsyncSession = Depends(get_db)):
     result = await db.execute(select(TaskDB).filter(TaskDB.id == id))
-    task = result.salars().first()
+    task = result.scalars().first()
     if task is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Tarea no encontrada")
     return task
